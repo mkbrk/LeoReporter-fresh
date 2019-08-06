@@ -44,7 +44,7 @@ var app = {
     getRemoteUrl : function(path) {
         //TODO: get the URL root from config file
         //return "https://www.leonetwork.org" + path;
-        return "https://leonetwork-staging.azurewebsites.net" + path; //maybe a cert issue?
+        return "https://leonetwork-staging.azurewebsites.net" + path; //maybe a cert issue? - nope
     },
     showPage: function(id)
     {
