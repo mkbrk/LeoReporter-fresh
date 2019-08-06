@@ -94,6 +94,9 @@
     </platform>
     
     <access origin="*" />
+    <allow-navigation href="*" />
+    <allow-intent href="*" />
+    
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
