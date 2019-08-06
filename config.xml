@@ -4,9 +4,8 @@
     <description>
     </description>
     <author email="support@leonetwork.org" href="https://www.leonetwork.org">
-        LEO Network Team
+        The LEO Network Team
     </author>
-
 
     <access origin="*" />
 
@@ -18,7 +17,6 @@
     <preference name="phonegap-version" value="cli-9.0.0" />
     <engine name="android" spec="^8.0.0" />
     <engine name="ios" spec="^5.0.1" />
-
 
     <plugin name="cordova-plugin-battery-status" spec="^1.2.5" />
     <plugin name="cordova-plugin-camera" spec="^3.0.0">
