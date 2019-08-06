@@ -1,14 +1,17 @@
+# Mac
+.DS_Store
 
-# Created by https://www.gitignore.io/api/apachecordova
-# Edit at https://www.gitignore.io/?templates=apachecordova
+# Node
+npm-debug.log
+/node_modules
 
-### ApacheCordova ###
-# Apache Cordova generated files and directories
-bin/*
-!/plugins
-!/plugins/android.json
-!/plugins/fetch.json
-plugins/*
-platforms/*
+# Cordova
+/platforms
+/plugins
 
-# End of https://www.gitignore.io/api/apachecordova
+# res
+resources/signing
+jsconfig.json
+.vscode/
+typings/
+
