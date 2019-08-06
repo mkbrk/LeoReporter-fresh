@@ -15,6 +15,7 @@
     <content src="index.html" />
 
     <preference name="DisallowOverscroll" value="true" />
+    <preference name="phonegap-version" value="cli-9.0.0" />
 
     <plugin name="cordova-plugin-battery-status" spec="^1.2.5" />
     <plugin name="cordova-plugin-camera" spec="^3.0.0">
