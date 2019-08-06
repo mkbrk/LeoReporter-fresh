@@ -7,14 +7,16 @@
         LEO Network Team
     </author>
 
-    <engine name="android" spec="~6.4.0" />
-    <engine name="ios" spec="^4.5.3" />
+    <engine name="android" spec="^8.0.0" />
+    <engine name="ios" spec="^5.0.1" />
 
     <access origin="*" />
 
     <content src="index.html" />
 
     <preference name="DisallowOverscroll" value="true" />
+
+    <!--this might be important!!-->
     <preference name="phonegap-version" value="cli-9.0.0" />
 
     <plugin name="cordova-plugin-battery-status" spec="^1.2.5" />
@@ -53,7 +55,6 @@
 
     <platform name="android">
         <preference name="android-minSdkVersion" value="19" />
-        <preference name="android-targetSdkVersion" value="28" />
         <preference name="Orientation" value="default" />
         <icon density="ldpi" src="www/res/icon/android/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="www/res/icon/android/drawable-mdpi-icon.png" />
