@@ -1,60 +1,330 @@
-<!DOCTYPE html>
-<!--
-    Copyright (c) 2012-2016 Adobe Systems Incorporated. All rights reserved.
+    <!DOCTYPE html>
+     <html>
 
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    
+        <!--
+        this FINALLY works:
+        note that gap: is very important for ios
+        and 'unsafe-inline' is very important for onclick, etc.
+        MAJOR hassle
 
-    http://www.apache.org/licenses/LICENSE-2.0
+        -->
+        <meta http-equiv="Content-Security-Policy" content="default-src * gap: data: 'unsafe-eval' 'unsafe-inline' blob:; img-src * data: gap: blob:; frame-src * gap: blob:; connect-src * ;style-src * 'self' 'unsafe-inline' 'unsafe-eval'; media-src *; script-src * data: 'self' 'unsafe-inline' 'unsafe-eval' gap: blob:; ">
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
-<html>
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="msapplication-tap-highlight" content="no" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
-    <!-- Good default declaration:
-    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-        * Enable inline JS: add 'unsafe-inline' to default-src
-        * Enable eval(): add 'unsafe-eval' to default-src
-    * Create your own at http://cspisawesome.com
-    -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/app.css" />
+    <link rel="stylesheet" type="text/css" href="css/observing.css" />
 
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>Hello World</title>
+    <style>
+        div.page
+        {
+            display: none;
+        }
+
+        div.observation-page
+        {
+            display: none;
+        }
+
+    </style>
+
+    <script>
+
+    </script>
+
+    <title>LEO Reporter</title>
 </head>
 
 <body>
-    <div class="app">
-        <h1>PhoneGap</h1>
-        <div id="deviceready" class="blink">
-            <p class="event listening">Connecting to Device</p>
-            <p class="event received">Device is Ready</p>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+        <a class="navbar-brand" href="javascript:app.showPage('about-page');" style="padding:5px;"><img style="max-width:40px;display:inline;" src="img/logo.png"/> Reporter</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="javascript:app.showPage('make-observation-page');">Make Observation</a></li>
+        <li><a href="javascript:app.showPage('settings-page');">Settings</a></li>
+        <li><a href="javascript:app.showPage('about-page');">About</a></li>
+
+    </ul>
+</div>
+</div>
+</nav>
+
+<div class="container" style="margin-top:90px;">
+
+    <div class="page" id="sign-in-page">
+        <h1>Sign In</h1>
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="LoginName" class="form-control" required/> 
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="Password" class="form-control" required/> 
+        </div>
+
+        <div>
+            <a type="button" href="javascript:app.doSignIn();" class="btn btn-primary">Sign In</a>
+            <a class="btn btn-link">Forgot Password</a>
         </div>
     </div>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript">
-        app.initialize();
-    </script>
+
+    <div class="page" id="about-page">
+        <h1>About LEO Reporter</h1>
+        <p>The LEO Reporter app is the easiest way to contribute to the Local Environmental Observer Network.</p>
+    </div>
+
+    <div class="page authenticate" id="make-observation-page">
+
+        <div class="observation-page" id="continue-page" style="display:none;">
+            <div >
+                <h1>Continue Editing?</h1>
+                <p>
+                    Looks like you started an observation and never finished it. Would you like to continue working on it?
+                </p>
+
+                <p>
+                    <a  href="javascript:observing.continueObservation();" class="btn btn-success">Continue Editing</a>
+                    <a  href="javascript:observing.newObservation();" class="btn btn-warning">Start Over</a>
+                </p>
+
+            </div>
+        </div>
+
+        <div class="observation-page" id="headline-page">
+            <div >
+                <h1>What's your Headline</h1>
+                <div class="form-group">
+                    <input type="text" id="ObservationTitle" name="ObservationTitle" class="form-control" />
+                </div>
+
+                <div style="text-align:center;">
+                    <a  class="btn btn-primary" href="javascript:observing.showPage('when-page');">Next <i class="glyphicon glyphicon-chevron-right"></i></a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="observation-page" id="when-page">
+            <div >
+                <h1>When did you make your observation?</h1>
+                <div class="form-group">
+                    <input type="date" class="form-control" id="ObservationDate" name="ObservationDate" />
+                </div>
+
+                <div style="text-align:center;">
+                    <a  tabindex="-1" class="btn btn-link" href="javascript:observing.showPage('headline-page');"><i class="glyphicon glyphicon-chevron-left"></i> Previous</a>
+                    <a  class="btn btn-primary" href="javascript:observing.showPage('location-page');">Next <i class="glyphicon glyphicon-chevron-right"></i></a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="observation-page" id="location-page">
+
+            <div >
+                <h1>Where did you make your observation?</h1>
+
+                <input type="hidden" class="form-control" id="LocationLat" name="LocationLat" />
+                <input type="hidden" class="form-control" id="LocationLng" name="LocationLng" />
+
+                <div id="geolocation-area">
+                    <div id="currentLocation" style="text-align:center;font-style:italic;color:gray;"></div>
+                    <div>
+                        <a class="btn btn-default btn-lg btn-block" href="javascript:observing.getCurrentLocation();"><i class="glyphicon glyphicon-screenshot"></i> Get Current Location</a>
+                    </div>
+
+                    <p style="text-align:center">or</p>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="LocationDescription" name="LocationDescription" placeholder="enter nearest community name" />
+                    </div>
+                </div>
+
+                <div style="text-align:center;">
+                    <a tabindex="-1" class="btn btn-link" href="javascript:observing.showPage('when-page');"><i class="glyphicon glyphicon-chevron-left"></i> Previous</a>
+                    <a class="btn btn-primary" href="javascript:observing.showPage('description-page');">Next <i class="glyphicon glyphicon-chevron-right"></i></a>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="observation-page"  id="description-page">
+
+            <div>
+                <h1>Please describe your observation</h1>
+                <div class="form-group">
+                    <textarea id="ObservationDescription" name="ObservationDescription"  class="form-control" rows="5"></textarea>
+                </div>
+
+                <div style="text-align:center;">
+                    <a tabindex="-1" class="btn btn-link" href="javascript:observing.showPage('location-page');"><i class="glyphicon glyphicon-chevron-left"></i> Previous</a>
+                    <a class="btn btn-primary"  href="javascript:observing.showPage('photos-page');">Next <i class="glyphicon glyphicon-chevron-right"></i></a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="observation-page"  id="photos-page">
+
+            <div >
+                <h1>Please add photos</h1>
+
+            <div style="text-align:center;">
+                <img style="max-width:100%;display:none;" id="Image_1"/>
+
+                <div class="text-center" style="text-align:center;">
+                    <p>
+                        <input style="text-align:center;display:none;width:80%;max-width:300px;border:1px solid silver;border-radius:6px;padding:6px;" id="Caption_1" type="text" class="" placeholder="Caption" name="Caption_1" />
+                    </p>
+
+                    <div>
+                        <a class="btn btn-lg btn-default" href="javascript:observing.addPhoto('1');"><i class="glyphicon glyphicon-camera"></i> Take or Choose Photo</a>
+                        <a style="display:none;" href="javascript:observing.removePhoto('1')" id="Remove_1" type="button" class="btn btn-link"><i class="glyphicon glyphicon-remove"></i> Remove</a>
+                    </div>
+                </div>
+            </div>
+
+        <div style="text-align:center;">
+            <a tabindex="-1" class="btn btn-link" href="javascript:observing.showPage('description-page');"><i class="glyphicon glyphicon-chevron-left"></i> Previous</a>
+            <a class="btn btn-primary" href="javascript:observing.showPage('categories-page');">Next <i class="glyphicon glyphicon-chevron-right"></i></a>
+        </div>
+
+    </div>
+</div>
+
+<script id="category-block-template" type="template/mustache">
+    <div class="category-block">
+        <label>
+            <input class="checkbox-inline" type="checkbox" name="CategoryID" value="{{CategoryID}}" />
+            {{{IconSvg}}}
+            <div>{{CategoryName}}</div>
+
+        </label>
+    </div>
+</script>
+
+
+<div class="observation-page"  id="categories-page">
+
+    <div >
+        <h1>Please categorize your observation</h1>
+
+        <div id="categories">
+            
+        </div>
+
+        <div style="text-align:center;">
+            <a tabindex="-1" class="btn btn-link" href="javascript:observing.showPage('photos-page');"><i class="glyphicon glyphicon-chevron-left"></i> Previous</a>
+            <a class="btn btn-primary"  href="javascript:observing.showPage('review-page');">Next <i class="glyphicon glyphicon-chevron-right"></i></a>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="observation-page"  id="review-page">
+
+    <div>
+        <h1>Please review your post</h1>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" onchange="$('#submitButton').prop('disabled', !this.checked);" />
+                        By checking this box, you give the LEO Network permission to publish your observation. You also attest that this observation is truthful and that you have given proper credit for any text or photos that aren't your own.
+                    </label>
+                </div>
+
+                <p>
+                    <a id="submitButton" disabled="disabled" class="btn btn-success btn-block" href="javascript:observing.saveObservation(false);"><i class="glyphicon glyphicon-ok-sign"></i> Submit Now</a>
+                </p>
+                <p>
+                    <a class="btn btn-primary btn-block" href="javascript:observing.saveObservation(true); observing.syncObservations();"><i class="glyphicon glyphicon-time"></i> Save and Submit Later</a>
+                </p>
+                <p>
+                    <a class="btn btn-default btn-block" href="javascript:observing.showPage('headline-page');"><i class="glyphicon glyphicon-pencil"></i> Make Changes</a>
+                </p>
+                <p>
+                    <a class="btn btn-danger btn-block" href="javascript:observing.abandonCurrentObservation();"><i class="glyphicon glyphicon-remove"></i> Delete Post</a>
+                </p>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="observation-page" id="thanks-page">
+    <div>
+        <h1>Thank You for Sharing your Observation</h1>
+        <div>
+            <a class="btn btn-primary" href="javascript:observing.startObservation();"><i class="glyphicon glyphicon-eye-open"></i> Make Another Observation</a>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="page" id="settings-page">
+    <h1><i class="glyphicon glyphicon-cog"></i> Settings</h1>
+
+    <div><a href="javascript:app.showPage('outbox-page');">Waiting to send: <span id="pendingObservationsCount" class="label label-primary">0</span></a></div>
+
+    <hr>
+
+        <p>        
+            <a id="signInButton" href="javascript:app.signIn();" class="btn btn-success btn-block">Sign In</a>
+            <a id="signOutButton" href="javascript:app.signOut();" class="btn btn-danger btn-block">Sign Out</a>
+        </p>
+    </div>
+</div>
+
+<div class="page" id="outbox-page">
+    <h1><i class="glyphicon glyphicon-envelope"></i> Outbox</h1>
+
+    <div id="pendingObservations">
+    </div>
+
+    <hr>
+
+    <p>        
+        <a href="javascript:observing.clearPendingObservations()" class="btn btn-danger btn-block">Delete All</a>
+    </p>
+</div>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="js/mustache.js"></script>
+<script type="text/javascript" src="js/moment.js"></script>
+
+<script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/observing.js"></script>
+<script type="text/javascript">
+    app.initialize();
+    observing.initialize();
+</script>
 </body>
 
 </html>

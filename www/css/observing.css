@@ -1,0 +1,27 @@
+ .category-block {
+        display: inline-block;
+        text-align: center;
+        padding: 10px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        width: 120px;
+        height: 120px;
+        border: 1px solid silver;
+        overflow: hidden;
+        border-radius: 4px;
+        text-overflow: ellipsis;
+        box-shadow: 2px 2px 10px #bbb;
+    }
+
+.category-block input {
+    -moz-transform: scale(1.5);
+    -ms-transform: scale(1.5);
+    -o-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+}
+
+.category-block svg
+{
+    width:50px;
+}
