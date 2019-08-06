@@ -94,6 +94,25 @@ var app = {
         var email = $("#sign-in-page").find("[name=LoginName]").val();
         var pwd = $("#sign-in-page").find("[name=Password]").val();
 
+        var postMe = JSON.stringify({LoginName:email, Password:pwd});
+
+        $.post(app.getRemoteUrl("/en/members/remoteauth"), postMe, function(res) {
+            if(res.Status == "OK")
+            {
+                var token = res.Token;
+                var storage = window.localStorage;
+                storage.setItem("TOKEN", token);    
+                app.showPage("make-observation-page");        
+            }
+            else
+            {
+                $("#sign-in-page").find("[name=Password]").val("");
+                navigator.notification.alert(res.Message, null, "Error", "OK");
+            }
+        }, "json");
+
+        return;
+
         app.postJson(app.getRemoteUrl("/en/members/remoteauth"), {LoginName:email, Password:pwd}, function(res) {
             if(res.Status == "OK")
             {
@@ -110,8 +129,8 @@ var app = {
         });
 
         return;
+
         
-        var postMe = JSON.stringify({LoginName:email, Password:pwd});
 
         //$.ajax({
         //    type: "POST",
@@ -133,19 +152,6 @@ var app = {
         //    }
         // });
 
-        $.post(app.getRemoteUrl("/en/members/remoteauth"), postMe, function(res) {
-            if(res.Status == "OK")
-            {
-                var token = res.Token;
-                var storage = window.localStorage;
-                storage.setItem("TOKEN", token);    
-                app.showPage("make-observation-page");        
-            }
-            else
-            {
-                $("#sign-in-page").find("[name=Password]").val("");
-                navigator.notification.alert(res.Message, null, "Error", "OK");
-            }
-        }, "json");
+        
     }
 };
