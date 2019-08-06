@@ -80,9 +80,37 @@ var app = {
         var token = storage.removeItem("TOKEN");  
         app.showPage("settings-page");
     },
+    postJson : function(url, data, callback) {
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+        xmlhttp.addEventListener("load", function() {
+            if(callback)
+                callback(JSON.parse(this.responseText));
+        });
+        xmlhttp.open("POST", url);
+        xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlhttp.send(JSON.stringify(data));
+    },
     doSignIn: function() {
         var email = $("#sign-in-page").find("[name=LoginName]").val();
         var pwd = $("#sign-in-page").find("[name=Password]").val();
+
+        app.postJson(app.getRemoteUrl("/en/members/remoteauth"), {LoginName:email, Password:pwd}, function(res) {
+            if(res.Status == "OK")
+            {
+                var token = res.Token;
+                var storage = window.localStorage;
+                storage.setItem("TOKEN", token);    
+                app.showPage("make-observation-page");        
+            }
+            else
+            {
+                $("#sign-in-page").find("[name=Password]").val("");
+                navigator.notification.alert(res.Message, null, "Error", "OK");
+            }
+        });
+
+        return;
+        
         var postMe = JSON.stringify({LoginName:email, Password:pwd});
 
         //$.ajax({

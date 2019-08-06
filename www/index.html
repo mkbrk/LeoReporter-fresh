@@ -13,9 +13,12 @@
         and 'unsafe-inline' is very important for onclick, etc.
         MAJOR hassle
 
-        -->
         <meta http-equiv="Content-Security-Policy" content="default-src * gap: data: 'unsafe-eval' 'unsafe-inline' blob:; img-src * data: gap: blob:; frame-src * gap: blob:; connect-src * gap: data: 'unsafe-eval' 'unsafe-inline' blob: ;style-src * 'self' 'unsafe-inline' 'unsafe-eval'; media-src *; script-src * data: 'self' 'unsafe-inline' 'unsafe-eval' gap: blob:; ">
 
+        -->
+        
+        <meta http-equiv="Content-Security-Policy" content="default-src * gap: data: 'unsafe-eval' 'unsafe-inline' blob: ws: https://ssl.gstatic.com;img-src * data: gap: blob: 'self' content:;frame-src * gap: blob:;connect-src * gap: data: 'unsafe-eval' 'unsafe-inline' blob:;style-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:;media-src *;script-src * data: 'self' 'unsafe-inline' 'unsafe-eval' gap: blob:;">
+        <!--<meta http-equiv="Content-Security-Policy" content="default-src * gap: ws: https://ssl.gstatic.com;img-src * 'self' data: content:;style-src 'self' 'unsafe-inline' data: blob:;script-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">-->
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="css/app.css" />
