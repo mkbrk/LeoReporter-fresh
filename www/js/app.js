@@ -85,39 +85,39 @@ var app = {
         var pwd = $("#sign-in-page").find("[name=Password]").val();
         var postMe = JSON.stringify({LoginName:email, Password:pwd});
 
-        $.ajax({
-            type: "POST",
-            url: app.getRemoteUrl("/en/members/remoteauth"),
-            dataType: "json",
-            data: {LoginName:email, Password:pwd},
-            success: function(data) {
-                console.log(data);
-                res = JSON.parse(data);
+        //$.ajax({
+        //    type: "POST",
+        //    url: app.getRemoteUrl("/en/members/remoteauth"),
+        //    dataType: "json",
+        //    data: JSON.stringify({LoginName:email, Password:pwd}),
+        //    success: function(data) {
+        //        console.log(data);
+        //        res = JSON.parse(data);
 
-                var token = res.Token;
-                var storage = window.localStorage;
-                storage.setItem("TOKEN", token);    
-                app.showPage("make-observation-page");    
-            },
-            error: function(e) {
-                $("#sign-in-page").find("[name=Password]").val("");
-                navigator.notification.alert(e.Message, null, "Error", "OK");
-            }
-         });
-
-        //$.post(app.getRemoteUrl("/en/members/remoteauth"), postMe, function(res) {
-        //    if(res.Status == "OK")
-        //    {
         //        var token = res.Token;
         //        var storage = window.localStorage;
         //        storage.setItem("TOKEN", token);    
-        //        app.showPage("make-observation-page");        
-        //    }
-        //    else
-        //    {
+        //        app.showPage("make-observation-page");    
+        //    },
+        //    error: function(e) {
         //        $("#sign-in-page").find("[name=Password]").val("");
-        //        navigator.notification.alert(res.Message, null, "Error", "OK");
+        //        navigator.notification.alert(e.Message, null, "Error", "OK");
         //    }
-        //}, "json");
+        // });
+
+        $.post(app.getRemoteUrl("/en/members/remoteauth"), postMe, function(res) {
+            if(res.Status == "OK")
+            {
+                var token = res.Token;
+                var storage = window.localStorage;
+                storage.setItem("TOKEN", token);    
+                app.showPage("make-observation-page");        
+            }
+            else
+            {
+                $("#sign-in-page").find("[name=Password]").val("");
+                navigator.notification.alert(res.Message, null, "Error", "OK");
+            }
+        }, "json");
     }
 };
